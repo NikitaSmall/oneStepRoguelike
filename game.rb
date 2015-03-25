@@ -23,7 +23,12 @@ class Game
     $prng = Random.new
     $drawer = Drawing.new MSG_LOG_ROWS
 
-    puts map.grid
+    map.grid.each do |row|
+      row.each do |tile|
+        print tile
+      end
+      puts
+    end
   end
 
   def process_input

@@ -57,7 +57,17 @@ class Drawing
   end
 
   def draw_map
+    player = $player
+    $level.grid.each_with_index do |level_row, row_ind|
+      level_row.each_with_index do |tile, col_ind|
+        screen_location = map_loc_to_screen_loc(col_ind, row_ind)
+        #TODO: line of sight
+        fore_color = TCOD::Color::LIGHT_GREY
+        back_color = TCOD::Color::rgb(0x24, 0x24, 0x24)
 
+        draw_char_to_location(tile, screen_location, fore_color: fore_color, back_color: back_color)
+      end
+    end
   end
 
   def draw_log
@@ -77,5 +87,12 @@ class Drawing
     TCOD.console_put_char(nil, location[:x], location[:y], char.ord, TCOD::BKGND_SET)
     TCOD.console_set_default_foreground(nil, DEFAULT_SCREEN_FORE_COLOR)
     TCOD.console_set_default_background(nil, DEFAULT_SCREEN_BACK_COLOR)
+  end
+
+  def map_loc_to_screen_loc(col, row)
+    {
+        x: col + @screen_map_offset_cols,
+        y: row + @screen_map_offset_rows
+    }
   end
 end

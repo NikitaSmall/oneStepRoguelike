@@ -15,9 +15,13 @@ class Dungeon
     map = cave.get_string
 
     @grid = Array.new
-    map.each_line do |s|
-      s[MAP_COLS] = ''
-      @grid << s
+    map.each_line do |line|
+      line[MAP_COLS] = ''
+      row = Array.new
+      line.chars do |s|
+        row << s
+      end
+      @grid << row
     end
   end
 
