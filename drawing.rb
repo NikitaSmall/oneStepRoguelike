@@ -2,7 +2,7 @@ require 'libtcod'
 
 class Drawing
   LIMIT_FPS = 20
-  SCREEN_ROWS = 50
+  SCREEN_ROWS = 45
   SCREEN_COLS = 80
 
   DEFAULT_SCREEN_FORE_COLOR = TCOD::Color::LIGHTER_GRAY
@@ -24,6 +24,7 @@ class Drawing
     draw_background
     draw_markers
     draw_map
+    draw_actors
 
     draw_log
 
@@ -48,7 +49,7 @@ class Drawing
       end
     end
 
-    (0..(SCREEN_ROWS - 30)).step(5) do |row_num|
+    (0..(SCREEN_ROWS - 15)).step(5) do |row_num|
       row_num.to_s.chars.each_with_index do |char, i|
         location = { x: i, y: row_num + @screen_map_offset_cols}
         draw_char_to_location(char, location, fore_color: TCOD::Color::WHITE)
@@ -70,8 +71,23 @@ class Drawing
     end
   end
 
-  def draw_log
+  def draw_actors
+    player = $actors[:player]
+    $actors.values.each do |actor|
+      screen_location = map_loc_to_screen_loc(actor.x, actor.y)
+      back_color = if actor.player? # || player.within_line_of_sight(actor.x, actor.y)
+        TCOD::Color.rgb(0x24, 0x24, 0x24)
+      else
+        TCOD::Color::BLACK
+      end
+      draw_char_to_location(actor.sigil, screen_location, fore_color: actor.fore_color, back_color: back_color)
+    end
+  end
 
+  def draw_log
+    $msg_log.last(@msg_log_rows).each_with_index do |msg, i|
+      TCOD.console_print(nil, TCOD::LEFT, @screen_msg_log_offset_rows + i, msg)
+    end
   end
 
   def draw_char_to_location(char, location, options={})
