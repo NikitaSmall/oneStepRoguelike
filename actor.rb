@@ -46,6 +46,8 @@ class Actor
       actors[bsym] = create_orc(dungeon_level, "Orc ##{n}")
     end
 
+    actors[:morgoth] = create_morgoth(dungeon_level, "Morgoth, the Great Enemy")
+
     return actors
   end
 
@@ -72,6 +74,18 @@ class Actor
                                name: name,
                                allegiance: :baddies
     })
+  end
+
+  def self.create_morgoth(dungeon_level, name)
+    Actor.new(dungeon_level, {
+                               sigil: 'M',
+                               fore_color: TCOD::Color::SEPIA,
+                               back_color: TCOD::Color::BLACK,
+                               hp: 10,
+                               damage: 2,
+                               name: name,
+                               allegiance: :baddies
+                           })
   end
 
   def outside_map?

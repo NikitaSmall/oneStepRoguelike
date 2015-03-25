@@ -23,12 +23,12 @@ class Game
     $prng = Random.new
     $drawer = Drawing.new MSG_LOG_ROWS
 
-    map.grid.each do |row|
-      row.each do |tile|
-        print tile
-      end
-      puts
-    end
+    #map.grid.each do |row|
+    #  row.each do |tile|
+    #    print tile
+    #  end
+    #  puts
+    #end
   end
 
   def process_input
@@ -111,21 +111,6 @@ class Game
     $msg_log.push message if message.length > 0
   end
 
-end
-
-module GlobalGameState
-  PRNG = $prng
-end
-
-module GlobalGameState
-  DUNGEON_LEVEL = $level
-  ACTORS = $actors
-  #PLAYER = $player
-  MSG_LOG = $msg_log
-end
-
-module GlobalUtilityState
-  DRAWER = $drawer
 end
 
 game = Game.new
