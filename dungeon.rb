@@ -40,7 +40,8 @@ class Dungeon
   end
 
   def get_rand_point
-    @rand_point = [rand(1..@height-2), rand(1..@width-2)]
+    point = [rand(1..MAP_ROWS-2), rand(1..MAP_COLS-2)]
+    return point
   end
 
   def get_free_rand_point
