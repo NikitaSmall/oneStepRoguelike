@@ -11,14 +11,14 @@ class Game
 
   MSG_LOG_ROWS = 6
   MSG_LOG_COLS = 80
-  MAX_MSG_LENGHT = MSG_LOG_COLS - 2
+  MAX_MSG_LENGTH = MSG_LOG_COLS - 2
 
   def initialize
-    $msg_log = []
+    $msg_log = Array.new
     map = Dungeon.new
     $level = map
     $actors = Actor.init_actors($level)
-    $player = Actor.create_player($level, "Fingolfin, the Elvenking")
+    #$player = Actor.create_player($level, "Fingolfin, the Elvenking")
 
     $prng = Random.new
     $drawer = Drawing.new MSG_LOG_ROWS
@@ -50,7 +50,7 @@ class Game
     return false unless input
     return false if input == "\x00"
 
-    player = GlobalGameState::PLAYER
+    player = $player
 
     player_moved = if input == 'w'
       player.move :north
@@ -72,7 +72,7 @@ class Game
 
   def exit_game
     msg_log "Press any key to flee from Morgoth"
-    GlobalUtilityState::DRAWER.draw_all
+    $drawer.draw_all
     k = get_input
     while k == nil do
       k = get_input
@@ -84,7 +84,7 @@ class Game
     msg_log "The glorious Fingolfin stands apart Morgoth, the great Enemy of Eldar and Mankind..."
 
     until TCOD.console_is_window_closed
-      GlobalUtilityState::DRAWER.draw_all
+      $drawer.draw_all
 
       player_acted = process_input
       if player_acted
@@ -97,6 +97,15 @@ class Game
     end
   end
 
+  def msg_log(message)
+    while message.length > MAX_MSG_LENGTH
+      short = message[0...MAX_MSG_LENGTH]
+      $msg_log.push short + ' _'
+      message = message[MAX_MSG_LENGTH..-1]
+    end
+    $msg_log.push message if message.length > 0
+  end
+
 end
 
 module GlobalGameState
@@ -106,7 +115,7 @@ end
 module GlobalGameState
   DUNGEON_LEVEL = $level
   ACTORS = $actors
-  PLAYER = $player
+  #PLAYER = $player
   MSG_LOG = $msg_log
 end
 
@@ -115,4 +124,4 @@ module GlobalUtilityState
 end
 
 game = Game.new
-#game.game
+game.game

@@ -27,15 +27,15 @@ class Drawing
 
     draw_log
 
-    TCOD.console_fluhs()
+    TCOD.console_flush()
   end
 
   def draw_background
-    TCOD.set_default_foreground(nil, DEFAULT_SCREEN_FORE_COLOR)
-    TCOD.set_default_background(nil, DEFAULT_SCREEN_BACK_COLOR)
+    TCOD.console_set_default_foreground(nil, DEFAULT_SCREEN_FORE_COLOR)
+    TCOD.console_set_default_background(nil, DEFAULT_SCREEN_BACK_COLOR)
     (0..SCREEN_ROWS).each do |screen_row|
       (0..SCREEN_COLS).each do |screen_col|
-        TCOD.console_put_char(nil, screen_col, screen_row, ' '.ord. TCOD::BKGND_SET)
+        TCOD.console_put_char(nil, screen_col, screen_row, ' '.ord, TCOD::BKGND_SET)
       end
     end
   end

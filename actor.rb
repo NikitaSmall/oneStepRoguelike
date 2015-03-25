@@ -1,3 +1,5 @@
+require 'libtcod'
+
 class Actor
   attr_accessor :sigil, :fore_color, :back_color, :x, :y, :hp, :sight_range, :name, :allegiance, :player, :damage
   GENERIC_ACTOR_OPTIONS = {
@@ -37,7 +39,7 @@ class Actor
   def self.init_actors(dungeon_level)
     actors = Hash.new
 
-    #actors[:player] = create_player(dungeon_level, "Fingolfin, the Elvenking")
+    actors[:player] = create_player(dungeon_level, "Fingolfin, the Elvenking")
 
     15.times do |n|
       bsym = :"Orc ##{n}"
