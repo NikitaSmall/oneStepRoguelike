@@ -41,7 +41,19 @@ class Drawing
   end
 
   def draw_markers
+    (0..(SCREEN_COLS - 30)).step(5) do |col_num|
+      col_num.to_s.chars.each_with_index do |char, i|
+        location = { x: col_num + @screen_map_offset_cols, y: i}
+        draw_char_to_location(char, location, fore_color: TCOD::Color::WHITE)
+      end
+    end
 
+    (0..(SCREEN_ROWS - 30)).step(5) do |row_num|
+      row_num.to_s.chars.each_with_index do |char, i|
+        location = { x: i, y: row_num + @screen_map_offset_cols}
+        draw_char_to_location(char, location, fore_color: TCOD::Color::WHITE)
+      end
+    end
   end
 
   def draw_map
@@ -50,5 +62,20 @@ class Drawing
 
   def draw_log
 
+  end
+
+  def draw_char_to_location(char, location, options={})
+    default_options = {
+        fore_color: DEFAULT_SCREEN_FORE_COLOR,
+        back_color: DEFAULT_SCREEN_BACK_COLOR
+    }
+
+    options = default_options.merge(options)
+
+    TCOD.console_set_default_foreground(nil, options[:fore_color])
+    TCOD.console_set_default_background(nil, options[:back_color])
+    TCOD.console_put_char(nil, location[:x], location[:y], char.ord, TCOD::BKGND_SET)
+    TCOD.console_set_default_foreground(nil, DEFAULT_SCREEN_FORE_COLOR)
+    TCOD.console_set_default_background(nil, DEFAULT_SCREEN_BACK_COLOR)
   end
 end
