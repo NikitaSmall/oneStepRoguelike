@@ -46,6 +46,30 @@ class Game
     return nil
   end
 
+  def process_player_input (input)
+    return false unless input
+    return false if input == "\x00"
+
+    player = GlobalGameState::PLAYER
+
+    player_moved = if input == 'w'
+      player.move :north
+    elsif input == 's'
+      player.move :south
+    elsif input == 'a'
+      player.move :west
+    elsif input == 'd'
+      player.move :east
+    elsif input == '.'
+      player.move :rest
+    else
+      msg_log "DEBUG: unknown command #{input}"
+      false
+    end
+
+    return player_moved
+  end
+
   def exit_game
     msg_log "Press any key to flee from Morgoth"
     GlobalUtilityState::DRAWER.draw_all
@@ -54,6 +78,23 @@ class Game
       k = get_input
     end
     exit 0
+  end
+
+  def game
+    msg_log "The glorious Fingolfin stands apart Morgoth, the great Enemy of Eldar and Mankind..."
+
+    until TCOD.console_is_window_closed
+      GlobalUtilityState::DRAWER.draw_all
+
+      player_acted = process_input
+      if player_acted
+        # process_non_player_actors
+        if player_is_alone?
+          msg_log "You beat Morgoth! Eternal glory to you!"
+          exit_game
+        end
+      end
+    end
   end
 
 end
@@ -74,3 +115,4 @@ module GlobalUtilityState
 end
 
 game = Game.new
+#game.game
