@@ -64,7 +64,8 @@ class Drawing
         screen_location = map_loc_to_screen_loc(col_ind, row_ind)
         #TODO: line of sight
         fore_color = TCOD::Color::LIGHT_GREY
-        back_color = TCOD::Color::rgb(0x24, 0x24, 0x24)
+        #back_color = TCOD::Color::rgb(0x24, 0x24, 0x24)
+        back_color = TCOD::Color::BLACK
 
         draw_char_to_location(tile, screen_location, fore_color: fore_color, back_color: back_color)
       end
@@ -75,11 +76,11 @@ class Drawing
     player = $actors[:player]
     $actors.values.each do |actor|
       screen_location = map_loc_to_screen_loc(actor.x, actor.y)
-      back_color = if actor.player? # || player.within_line_of_sight(actor.x, actor.y)
-        TCOD::Color.rgb(0x24, 0x24, 0x24)
-      else
+      back_color = #if actor.player? # || player.within_line_of_sight(actor.x, actor.y)
+        #TCOD::Color.rgb(0x24, 0x24, 0x24)
+      #else
         TCOD::Color::BLACK
-      end
+      #end
       draw_char_to_location(actor.sigil, screen_location, fore_color: actor.fore_color, back_color: back_color)
     end
   end

@@ -139,10 +139,7 @@ class Actor
   end
 
   def move(direction)
-    if direction == :rest
-      Game.msg_log "You desided to rest."
-      return true
-    end
+    return true if direction == :rest
 
     return false if outside_map?
     return false unless can_move? direction
