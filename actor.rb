@@ -126,10 +126,87 @@ class Actor
   end
 
   def kill!
-
+    $actors.delete(($actors.key(self)))
   end
 
   def self.actor_at_pos(col, row)
-
+    $actors.values.each do |actor|
+      if actor.x == col && actor.y == row
+        return actor
+      end
+    end
+    return nil
   end
+
+  def move(direction)
+    if direction == :rest
+      Game.msg_log "You desided to rest."
+      return true
+    end
+
+    return false if outside_map?
+    return false unless can_move? direction
+
+    dx, dy = direction_to_delta(direction)
+
+    other_actor = Actor.actor_at_pos(@x + dx, @y + dy)
+    if other_actor
+      if enemy? other_actor
+        attack! other_actor
+
+        return true
+      end
+    else
+      @x += dx
+      @y += dy
+    end
+
+    true
+  end
+
+  def enemy?(target)
+    @allegiance != target.allegiance
+  end
+
+  def attack!(target)
+    target.hurt(@damage)
+    if target.alive?
+      Game.msg_log "#{@name} hurted #{target.name} for #{@damage} hp"
+    else
+      Game.msg_log "#{@name} killed #{target.name}"
+      target.kill!
+    end
+  end
+
+  def direction_to_delta(direction)
+    return [0, 1] if direction == :south
+    return [0, -1] if direction == :north
+    return [-1, 0] if direction == :west
+    return [1, 0] if direction == :east
+    return [0, 0]
+  end
+
+  def delta_to_direction(dx, dy)
+    return :south if dx == 0 && dy == 1
+    return :north if dx == 0 && dy == -1
+    return :west if dx == 1 && dy == 0
+    return :east if dx == -1 && dy == 0
+    return :rest
+  end
+
+  def can_move? (direction)
+    dx, dy = direction_to_delta(direction)
+    @dungeon.walkable?(@x + dx, @y + dy)
+  end
+
+  def decide_move
+    directions = [:south, :north, :west, :east, :rest]
+    options = Array.new
+
+    directions.each do |dir|
+      options << dir if can_move? dir
+    end
+    return options.sample
+  end
+
 end

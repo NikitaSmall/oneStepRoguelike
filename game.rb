@@ -55,7 +55,7 @@ class Game
     return false unless input
     return false if input == "\x00"
 
-    player = $player
+    player = $actors[:player]
 
     player_moved = if input == 'w'
       player.move :north
@@ -68,7 +68,7 @@ class Game
     elsif input == '.'
       player.move :rest
     else
-      msg_log "DEBUG: unknown command #{input}"
+      Game.msg_log "DEBUG: unknown command #{input}"
       false
     end
 
@@ -76,7 +76,7 @@ class Game
   end
 
   def exit_game
-    msg_log "Press any key to flee from Morgoth"
+    Game.msg_log "Press any key to flee from Morgoth"
     $drawer.draw_all
     k = get_input
     while k == nil do
@@ -85,24 +85,39 @@ class Game
     exit 0
   end
 
+  def process_non_player_actors
+    $actors.values.select {|a| not a.player? }.each do |actor|
+      move_dir = actor.decide_move
+      actor.move move_dir
+    end
+  end
+
   def game
-    msg_log "The glorious Fingolfin stands apart Morgoth, the great Enemy of Eldar and Mankind..."
+    Game.msg_log "The glorious Fingolfin stands apart Morgoth, the great Enemy of Eldar and Mankind..."
 
     until TCOD.console_is_window_closed
       $drawer.draw_all
 
       player_acted = process_input
       if player_acted
-        # process_non_player_actors
+        process_non_player_actors
         if player_is_alone?
-          msg_log "You beat Morgoth! Eternal glory to you!"
+          Game.msg_log "You beat Morgoth! Eternal glory to you!"
           exit_game
         end
       end
     end
   end
 
-  def msg_log(message)
+  def player_is_alone?
+    if $actors.count == 1 && $actors[:player] != nil
+      return true
+    else
+      return false
+    end
+  end
+
+  def self.msg_log(message)
     while message.length > MAX_MSG_LENGTH
       short = message[0...MAX_MSG_LENGTH]
       $msg_log.push short + ' _'
