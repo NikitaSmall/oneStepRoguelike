@@ -9,7 +9,7 @@ class Game
   MAP_ROWS = 32
   MAP_COLS = 48
 
-  MSG_LOG_ROWS = 6
+  MSG_LOG_ROWS = 7
   MSG_LOG_COLS = 80
   MAX_MSG_LENGTH = MSG_LOG_COLS - 2
 
