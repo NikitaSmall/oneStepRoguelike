@@ -20,15 +20,28 @@ class Drawing
     @screen_map_offset_cols = 3
   end
 
-  def draw_all
+  def draw_all(id=nil)
     draw_background
     draw_markers
     draw_map
     draw_actors
 
+    #draw_frames if $screen.windows_pool.count > 0
+    draw_frame(id) unless id.nil?
+
     draw_log
 
     TCOD.console_flush()
+  end
+
+  def draw_frames
+    $screen.windows_pool.each do |window|
+      window.show
+    end
+  end
+
+  def draw_frame(id)
+    $screen.windows_pool.get_window(id).show
   end
 
   def draw_background

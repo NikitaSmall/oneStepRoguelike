@@ -5,6 +5,8 @@ require './dungeon'
 require './drawing'
 require './actor'
 
+require './util/screen'
+
 class Game
   MAP_ROWS = 32
   MAP_COLS = 48
@@ -22,6 +24,9 @@ class Game
 
     $prng = Random.new
     $drawer = Drawing.new MSG_LOG_ROWS
+
+    $screen = Screen.new
+
 
     #map.grid.each do |row|
     #  row.each do |tile|
@@ -67,6 +72,14 @@ class Game
       player.move :east
     elsif input == '.'
       player.move :rest
+    elsif input == 'c'
+      $screen.windows_pool.create_window(:stats, BaseWindow, 'Stats',
+                                         {"Player name" => $actors[:player].name,
+                                          "Health points remain" => $actors[:player].hp}
+      )
+      $drawer.draw_all(:stats)
+      $screen.windows_pool.remove_window(:stats)
+      false
     else
       Game.msg_log "DEBUG: unknown command #{input}"
       false
@@ -95,8 +108,9 @@ class Game
   def game
     Game.msg_log "The glorious Fingolfin stands apart Morgoth, the great Enemy of Eldar and Mankind..."
 
+    $drawer.draw_all
     until TCOD.console_is_window_closed
-      $drawer.draw_all
+
 
       player_acted = process_input
       if player_acted
@@ -105,6 +119,7 @@ class Game
           Game.msg_log "You beat Morgoth! Eternal glory to you!"
           exit_game
         end
+        $drawer.draw_all
       end
     end
   end
