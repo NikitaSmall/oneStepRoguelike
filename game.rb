@@ -111,7 +111,7 @@ class Game
     $drawer.draw_all
     until TCOD.console_is_window_closed
 
-
+      #TODO: Make a normal sequence of game flow
       player_acted = process_input
       if player_acted
         process_non_player_actors

@@ -1,3 +1,5 @@
+#TODO: refactor and make update without create/delete methods
+
 class Screen
   attr_accessor :windows_pool, :height, :width
 
