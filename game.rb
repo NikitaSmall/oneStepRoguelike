@@ -27,6 +27,15 @@ class Game
 
     $screen = Screen.new
 
+    stats = lambda do
+      return {"Player name" => $actors[:player].name,
+              "Health points remain" => $actors[:player].hp}
+    end
+
+    $screen.windows_pool.create_window(:stats, BaseWindow, 'Stats', stats
+
+    )
+
 
     #map.grid.each do |row|
     #  row.each do |tile|
@@ -73,12 +82,7 @@ class Game
     elsif input == '.'
       player.move :rest
     elsif input == 'c'
-      $screen.windows_pool.create_window(:stats, BaseWindow, 'Stats',
-                                         {"Player name" => $actors[:player].name,
-                                          "Health points remain" => $actors[:player].hp}
-      )
       $drawer.draw_all(:stats)
-      $screen.windows_pool.remove_window(:stats)
       false
     else
       Game.msg_log "DEBUG: unknown command #{input}"
