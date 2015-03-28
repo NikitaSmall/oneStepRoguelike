@@ -41,7 +41,7 @@ class Drawing
   end
 
   def draw_frame(id)
-    $screen.windows_pool.get_window(id).show
+    $screen.draw_frame(id)
   end
 
   def draw_background

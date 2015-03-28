@@ -1,12 +1,25 @@
+#require './util/tile'
+class Point
+  attr_accessor :char, :foreground, :background
+
+  def initialize(char=' ', foreground=TCOD::Color::LIGHTER_GRAY, background=TCOD::Color::BLACK)
+    @char = char
+    @foreground = foreground
+    @background = background
+  end
+
+  def set_char(char, foreground, background)
+    @char = char
+    @foreground = foreground
+    @background = background
+  end
+end
+
 class BaseWindow
-  attr_accessor :x, :y, :h, :w, :content, :name, :methods
+  attr_accessor :id, :x, :y, :h, :w, :tiles, :methods
 
-  DEFAULT_SCREEN_FORE_COLOR = TCOD::Color::LIGHTER_GRAY
-  DEFAULT_SCREEN_BACK_COLOR = TCOD::Color::BLACK
-
-  def initialize(name, content, methods, x, y, h, w)
-    @name = name
-    @content = content
+  def initialize(id, x, y, h, w, methods)
+    @id = id
 
     @h = h
     @w = w
@@ -14,69 +27,37 @@ class BaseWindow
     @y = y
 
     @methods = methods
-
     @offset = (h / 10).to_i
-  end
 
-  def show
-    draw_frame
-    draw_name
+    rows, cols = (@w - @x), (@h - @y)
 
-    draw_content
-  end
-
-  def draw_frame
-    (@x..(@x + @w)).each do |x|
-      (@y..(@y + @h)).each do |y|
-        draw_char_to_location(" ", {x: x, y: y})
+    @tiles = Array.new(rows)
+    rows.times do |y_ind|
+      @tiles[y_ind] = Array.new(cols)
+      cols.times do |x_ind|
+        @tiles[y_ind][x_ind] = Point.new
       end
     end
 
-    (@x..(@x + @w)).each do |x|
-      draw_char_to_location("#", {x: x, y: @y})
-      draw_char_to_location("#", {x: x, y: @y+@h})
-    end
-
-    (@y..(@x + @h)).each do |y|
-      draw_char_to_location("#", {x: @x, y: y})
-      draw_char_to_location("#", {x: @x+@w, y: y})
-    end
   end
 
-  def draw_name
-    draw_word(@name, @offset, @y)
-  end
-
-  def draw_content
-    y = 0
-    content = @content.call
-    content.each do |name, value|
-      draw_word("#{name}: #{value}", @offset, @offset + y)
-      y += 1
-    end
-  end
-
-  def draw_word(word, x_start, y_start)
-    i = 0
-    word.each_char do |letter|
-      draw_char_to_location(letter, {x: i + x_start, y: y_start})
-      i += 1
-    end
-  end
-
-  def draw_char_to_location(char, location, options={})
+  def putch(char, x, y, options={})
     default_options = {
-        fore_color: DEFAULT_SCREEN_FORE_COLOR,
-        back_color: DEFAULT_SCREEN_BACK_COLOR
+        fore_color: TCOD::Color::LIGHTER_GRAY,
+        back_color: TCOD::Color::BLACK
     }
 
     options = default_options.merge(options)
 
-    TCOD.console_set_default_foreground(nil, options[:fore_color])
-    TCOD.console_set_default_background(nil, options[:back_color])
-    TCOD.console_put_char(nil, location[:x], location[:y], char.ord, TCOD::BKGND_SET)
-    TCOD.console_set_default_foreground(nil, DEFAULT_SCREEN_FORE_COLOR)
-    TCOD.console_set_default_background(nil, DEFAULT_SCREEN_BACK_COLOR)
+    @tiles[y][x] = Point.new(char, options[:fore_color], options[:back_color])
+  end
+
+  def puts(string, x_start, y_start, options={})
+    i = 0
+    string.each_char do |char|
+      putch(char, x_start + i, y_start, options)
+      i += 1
+    end
   end
 
 end

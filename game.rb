@@ -32,9 +32,7 @@ class Game
               "Health points remain" => $actors[:player].hp}
     end
 
-    $screen.windows_pool.create_window(:stats, BaseWindow, 'Stats', stats
-
-    )
+    $screen.windows_pool.create_window(:stats, InformWindow, 'Stats', stats)
 
 
     #map.grid.each do |row|
