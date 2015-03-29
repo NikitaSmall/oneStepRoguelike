@@ -19,9 +19,9 @@ class Screen
   def draw_frame(frame_id)
     update
     frame = @windows_pool.get_window(frame_id)
-    frame.tiles.each_with_index do |y, y_index|
-      y.each_with_index do |x, x_index|
-        draw_char_to_location(x.char, x_index, y_index, {fore_color: x.foreground, back_color: x.background})
+    (frame.y..(frame.y + frame.h)).each do |y|
+      (frame.x..(frame.x + frame.w)).each do |x|
+        draw_char_to_location(frame.tiles[y][x].char, x, y, {fore_color: frame.tiles[y][x].foreground, back_color: frame.tiles[y][x].background})
       end
     end
   end

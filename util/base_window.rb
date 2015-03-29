@@ -14,7 +14,7 @@ class BaseWindow
     @methods = methods
     @offset = (h / 10).to_i
 
-    rows, cols = (@w - @x), (@h - @y)
+    rows, cols = @w, @h
 
     @tiles = Array.new(rows)
     rows.times do |y_ind|

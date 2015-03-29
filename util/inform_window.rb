@@ -34,7 +34,7 @@ class InformWindow < BaseWindow
   end
 
   def put_name
-    puts(@name, @offset, @y)
+    puts(@name, @offset + @x, @y)
   end
 
   def put_content
@@ -45,7 +45,7 @@ class InformWindow < BaseWindow
       content = @content
     end
     content.each do |name, value|
-      puts("#{name}: #{value}", @offset, @offset + y)
+      puts("#{name}: #{value}", @offset + @x, @offset + y + @y)
       y += 1
     end
   end
