@@ -1,4 +1,4 @@
-require './util/inform_window'
+require './util/windows/inform_window'
 
 class WindowsPool
   attr_accessor :windows
