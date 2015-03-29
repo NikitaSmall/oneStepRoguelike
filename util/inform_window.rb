@@ -16,8 +16,8 @@ class InformWindow < BaseWindow
   end
 
   def put_frame
-    (@x..(@x + @w)).each do |x|
-      (@y..(@y + @h)).each do |y|
+    (@y..(@y + @h)).each do |y|
+      (@x..(@x + @w)).each do |x|
         putch(" ", x, y)
       end
     end
@@ -27,7 +27,7 @@ class InformWindow < BaseWindow
       putch("#", x, @y+@h)
     end
 
-    (@y..(@x + @h)).each do |y|
+    (@y..(@y + @h)).each do |y|
       putch("#", @x, y)
       putch("#", @x+@w, y)
     end
@@ -45,8 +45,16 @@ class InformWindow < BaseWindow
       content = @content
     end
     content.each do |name, value|
-      puts("#{name}: #{value}", @offset + @x, @offset + y + @y)
-      y += 1
+      if "#{name}: #{value}".length + 2 * @offset >= @w
+        lines = string_to_lines("#{name}: #{value}")
+        lines.each do |line|
+          puts(line, @offset + @x, @offset + y + @y)
+          y += 1
+        end
+      else
+        puts("#{name}: #{value}", @offset + @x, @offset + y + @y)
+        y += 1
+      end
     end
   end
 end

@@ -13,6 +13,7 @@ class BaseWindow
 
     @methods = methods
     @offset = (h / 10).to_i
+    @offset = 1 if @offset < 1
 
     rows, cols = @w, @h
 
@@ -43,6 +44,15 @@ class BaseWindow
       putch(char, x_start + i, y_start, options)
       i += 1
     end
+  end
+
+  def string_to_lines(string)
+    lines = Array.new
+    while string.length + 2 * @offset >= @w
+      lines << string.slice!(0..(@w - 2 * @offset))
+    end
+    lines << string
+    lines
   end
 
 end
