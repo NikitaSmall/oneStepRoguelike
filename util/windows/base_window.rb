@@ -1,4 +1,4 @@
-require './util/windows/tile'
+require './util/windows/character'
 
 class BaseWindow
   attr_accessor :id, :x, :y, :h, :w, :tiles, :methods
@@ -21,7 +21,7 @@ class BaseWindow
     rows.times do |y_ind|
       @tiles[y_ind] = Array.new(cols)
       cols.times do |x_ind|
-        @tiles[y_ind][x_ind] = Point.new
+        @tiles[y_ind][x_ind] = Character.new
       end
     end
 
@@ -35,7 +35,7 @@ class BaseWindow
 
     options = default_options.merge(options)
 
-    @tiles[y][x] = Point.new(char, options[:fore_color], options[:back_color])
+    @tiles[y][x] = Character.new(char, options[:fore_color], options[:back_color])
   end
 
   def puts(string, x_start, y_start, options={})

@@ -1,4 +1,4 @@
-class Point
+class Character
   attr_accessor :char, :foreground, :background
 
   def initialize(char=' ', foreground=TCOD::Color::LIGHTER_GRAY, background=TCOD::Color::BLACK)
