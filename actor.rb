@@ -141,8 +141,17 @@ class Actor
   def move(direction)
     return true if direction == :rest
 
+    dx, dy = direction_to_delta(direction)
+
     return false if outside_map?
-    return false unless can_move? direction
+    #return false unless can_move? direction
+    unless can_move? direction
+      @hp -= 1
+      @dungeon.walkable!(@x + dx, @y + dy)
+      Game.msg_log "#{@name} breaks a wall with his head"
+      Game.msg_log "#{@name} breaks his head with the wall" if @hp <= 0
+      kill! unless alive?
+    end
 
     dx, dy = direction_to_delta(direction)
 

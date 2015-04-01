@@ -43,6 +43,11 @@ class Dungeon
     @grid[row][col] == FLOR_CHAR
   end
 
+  def walkable!(col, row)
+    return false if out_of_bounds?(col, row)
+    @grid[row][col] = FLOR_CHAR
+  end
+
   def get_rand_point
     point = [rand(1..MAP_ROWS-2), rand(1..MAP_COLS-2)]
     return point
